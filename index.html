@@ -1,0 +1,609 @@
+// Add this function to calculate Dasha periods
+function calculateDashaPeriods(birthdate) {
+    // Simplified Vimshottari Dasha calculation
+    // Full implementation would require exact birth time and location
+    const birthYear = birthdate.getFullYear();
+    const birthMonth = birthdate.getMonth() + 1;
+    const birthDay = birthdate.getDate();
+    
+    // Calculate a seed value based on birth date components
+    const seed = (birthYear % 9) + (birthMonth % 9) + (birthDay % 9);
+    
+    // Map seed to starting Dasha lord (0-8 representing Ketu, Venus, Sun, Moon, Mars, Rahu, Jupiter, Saturn, Mercury)
+    const dashaLords = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"];
+    const currentLordIndex = seed % 9;
+    const currentLord = dashaLords[currentLordIndex];
+    
+    // Dasha durations in years
+    const dashaDurations = {
+        "Ketu": 7, 
+        "Venus": 20, 
+        "Sun": 6, 
+        "Moon": 10, 
+        "Mars": 7, 
+        "Rahu": 18, 
+        "Jupiter": 16, 
+        "Saturn": 19, 
+        "Mercury": 17
+    };
+    
+    // Calculate current Dasha based on birth year and durations
+    const today = new Date();
+    let elapsedYears = today.getFullYear() - birthYear;
+    
+    // Adjust for months and days
+    if (today.getMonth() < birthdate.getMonth() || 
+        (today.getMonth() === birthdate.getMonth() && today.getDate() < birthdate.getDate())) {
+        elapsedYears--;
+    }
+    
+    // Find current Dasha
+    let cumulativeYears = 0;
+    let lordIndex = currentLordIndex;
+    let currentDasha = "";
+    let remainingYears = 0;
+    let nextDasha = "";
+    
+    while (cumulativeYears <= elapsedYears) {
+        currentDasha = dashaLords[lordIndex % 9];
+        cumulativeYears += dashaDurations[currentDasha];
+        
+        if (cumulativeYears > elapsedYears) {
+            remainingYears = cumulativeYears - elapsedYears;
+            nextDasha = dashaLords[(lordIndex + 1) % 9];
+            break;
+        }
+        
+        lordIndex++;
+    }
+    
+    // Calculate sub-dasha (Antardasha)
+    const subDashaIndex = (lordIndex + 1) % 9;
+    const subDasha = dashaLords[subDashaIndex];
+    
+    return {
+        mainDasha: currentDasha,
+        remainingYears: remainingYears,
+        nextDasha: nextDasha,
+        subDasha: subDasha
+    };
+}
+
+// Add function to get gemstone recommendations based on zodiac sign
+function getGemstoneRecommendations(sign) {
+    const gemstones = {
+        "Aries": {
+            primary: "Red Coral",
+            secondary: "Ruby",
+            avoid: "Blue Sapphire",
+            benefits: "Enhances courage, vitality, and leadership qualities"
+        },
+        "Taurus": {
+            primary: "Diamond",
+            secondary: "White Sapphire",
+            avoid: "Hessonite",
+            benefits: "Promotes wealth, artistic abilities, and relationship harmony"
+        },
+        "Gemini": {
+            primary: "Emerald",
+            secondary: "Peridot",
+            avoid: "Ruby",
+            benefits: "Improves communication skills, intellect, and business acumen"
+        },
+        "Cancer": {
+            primary: "Pearl",
+            secondary: "Moonstone",
+            avoid: "Cat's Eye",
+            benefits: "Enhances emotional stability, intuition, and family relationships"
+        },
+        "Leo": {
+            primary: "Ruby",
+            secondary: "Garnet",
+            avoid: "Emerald",
+            benefits: "Boosts confidence, authority, and creative expression"
+        },
+        "Virgo": {
+            primary: "Emerald",
+            secondary: "Jade",
+            avoid: "Yellow Sapphire",
+            benefits: "Improves analytical abilities, health, and career prospects"
+        },
+        "Libra": {
+            primary: "Diamond",
+            secondary: "Opal",
+            avoid: "Pearl",
+            benefits: "Promotes harmony, aesthetic sense, and balanced relationships"
+        },
+        "Scorpio": {
+            primary: "Red Coral",
+            secondary: "Bloodstone",
+            avoid: "Diamond",
+            benefits: "Enhances willpower, intuition, and transformative abilities"
+        },
+        "Sagittarius": {
+            primary: "Yellow Sapphire",
+            secondary: "Topaz",
+            avoid: "Cat's Eye",
+            benefits: "Boosts optimism, spiritual growth, and good fortune"
+        },
+        "Capricorn": {
+            primary: "Blue Sapphire",
+            secondary: "Amethyst",
+            avoid: "Red Coral",
+            benefits: "Improves discipline, career prospects, and long-term stability"
+        },
+        "Aquarius": {
+            primary: "Blue Sapphire",
+            secondary: "Lapis Lazuli",
+            avoid: "Pearl",
+            benefits: "Enhances intellectual capacity, innovation, and social connections"
+        },
+        "Pisces": {
+            primary: "Yellow Sapphire",
+            secondary: "Amethyst",
+            avoid: "Emerald",
+            benefits: "Promotes spiritual intuition, creative inspiration, and emotional healing"
+        }
+    };
+    
+    return gemstones[sign] || {
+        primary: "Clear Quartz",
+        secondary: "Amethyst",
+        avoid: "None specific",
+        benefits: "Universal balancing properties"
+    };
+}
+
+// Add function to get remedial measures based on Dasha
+function getRemedialMeasures(dasha) {
+    const remedies = {
+        "Ketu": {
+            fasting: "Tuesdays",
+            color: "Gray or multicolored",
+            deity: "Lord Ganesha",
+            mantra: "Om Kem Ketave Namah",
+            charity: "Donate pulses, especially black lentils",
+            actions: "Feed dogs and crows, avoid alcohol and meat"
+        },
+        "Venus": {
+            fasting: "Fridays",
+            color: "White or silver",
+            deity: "Goddess Lakshmi",
+            mantra: "Om Shum Shukraya Namah",
+            charity: "Donate white flowers, rice, or silver items",
+            actions: "Maintain ethical relationships, respect women"
+        },
+        "Sun": {
+            fasting: "Sundays",
+            color: "Red or copper",
+            deity: "Lord Shiva or Surya",
+            mantra: "Om Hram Hreem Hraum Sah Suryaya Namah",
+            charity: "Donate wheat, jaggery, or copper items",
+            actions: "Offer water to the Sun in the morning"
+        },
+        "Moon": {
+            fasting: "Mondays",
+            color: "White or cream",
+            deity: "Lord Shiva",
+            mantra: "Om Shraam Shreem Shraum Sah Chandraya Namah",
+            charity: "Donate rice, milk, or silver items",
+            actions: "Respect mother, avoid alcohol"
+        },
+        "Mars": {
+            fasting: "Tuesdays",
+            color: "Red",
+            deity: "Lord Hanuman or Kartikeya",
+            mantra: "Om Kram Kreem Kraum Sah Bhaumaya Namah",
+            charity: "Donate red lentils, red clothes, or copper items",
+            actions: "Control anger, practice physical exercise"
+        },
+        "Rahu": {
+            fasting: "Saturdays",
+            color: "Blue or black",
+            deity: "Lord Durga or Bhairava",
+            mantra: "Om Ram Rahave Namah",
+            charity: "Feed crows, donate dark grains",
+            actions: "Avoid manipulation, practice honesty"
+        },
+        "Jupiter": {
+            fasting: "Thursdays",
+            color: "Yellow or gold",
+            deity: "Lord Vishnu or Dakshinamurthy",
+            mantra: "Om Gram Greem Graum Sah Gurave Namah",
+            charity: "Donate yellow items, books, gold",
+            actions: "Respect teachers, study spiritual texts"
+        },
+        "Saturn": {
+            fasting: "Saturdays",
+            color: "Blue, black, or dark purple",
+            deity: "Lord Hanuman or Shani",
+            mantra: "Om Sham Shanaishcharaya Namah",
+            charity: "Donate black sesame seeds, iron, oil",
+            actions: "Serve elders and the needy, practice humility"
+        },
+        "Mercury": {
+            fasting: "Wednesdays",
+            color: "Green",
+            deity: "Lord Vishnu",
+            mantra: "Om Bum Budhaya Namah",
+            charity: "Donate green moong dal, books, emerald",
+            actions: "Improve communication skills, practice honesty"
+        }
+    };
+    
+    return remedies[dasha] || {
+        fasting: "Based on weekday of birth",
+        color: "White",
+        deity: "Ishta Devata (personal deity)",
+        mantra: "Om Namah Shivaya",
+        charity: "According to personal capacity",
+        actions: "Practice meditation and positive thinking"
+    };
+}
+
+// Modify the generateReport function to add these new elements
+function generateReport() {
+    const name = document.getElementById('name').value;
+    const birthdate = new Date(document.getElementById('birthdate').value);
+    const gender = document.getElementById('gender').value;
+    
+    if (!name || isNaN(birthdate.getTime()) || !gender) {
+        alert("Please fill all fields correctly");
+        return;
+    }
+    
+    // Display basic info
+    document.getElementById('userName').textContent = name;
+    document.getElementById('reportDate').textContent = new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    // Calculate zodiac info
+    const zodiacInfo = getZodiacInfo(birthdate);
+    document.getElementById('sunSign').textContent = zodiacInfo.sign + " (" + zodiacInfo.dateRange + ")";
+    document.getElementById('risingSign').textContent = getRisingSign(birthdate);
+    document.getElementById('moonSign').textContent = getMoonSign(birthdate);
+    document.getElementById('element').textContent = zodiacInfo.element;
+    document.getElementById('zodiacSymbol').textContent = zodiacInfo.symbol;
+    
+    // Calculate exact age
+    const ageInfo = calculateExactAge(birthdate);
+    document.getElementById('ageYears').textContent = ageInfo.years;
+    document.getElementById('ageMonths').textContent = ageInfo.months;
+    document.getElementById('ageDays').textContent = ageInfo.days;
+    document.getElementById('totalMonths').textContent = ageInfo.totalMonths;
+    document.getElementById('totalDays').textContent = ageInfo.totalDays;
+    document.getElementById('nextBirthday').textContent = ageInfo.daysUntilNextBirthday;
+    
+    // Generate predictions
+    generatePredictions(name, zodiacInfo, gender);
+    
+    // Generate Dasha analysis
+    generateDashaAnalysis(birthdate, zodiacInfo);
+    
+    // Generate Gemstone recommendations
+    generateGemstoneRecommendations(zodiacInfo.sign);
+    
+    // Show result with animation
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    result.scrollIntoView({ behavior: 'smooth' });
+    
+    // Refresh ads after results are shown
+    refreshAds();
+}
+
+// New function to generate Dasha analysis
+function generateDashaAnalysis(birthdate, zodiacInfo) {
+    // Get Dasha periods
+    const dashaInfo = calculateDashaPeriods(birthdate);
+    
+    // Create Dasha HTML content
+    const dashaHTML = `
+        <div class="prediction-card">
+            <h4><span id="dashaEmoji">⏳</span> Your Current Dasha Period</h4>
+            <p>You are currently running <span class="highlight">${dashaInfo.mainDasha} Mahadasha</span> with 
+               <span class="highlight">${dashaInfo.subDasha} Antardasha</span>.</p>
+            <p>Your ${dashaInfo.mainDasha} Mahadasha has <span class="highlight">${dashaInfo.remainingYears} years</span> remaining, 
+               after which <span class="highlight">${dashaInfo.nextDasha} Mahadasha</span> will begin.</p>
+            <button class="toggle-btn" onclick="toggleSection('dashaDetails')">Show Detailed Dasha Analysis</button>
+            <div id="dashaDetails" class="hidden-section">
+                <p><strong>${dashaInfo.mainDasha} Influence:</strong> 
+                ${getDashaEffects(dashaInfo.mainDasha, zodiacInfo.sign)}</p>
+                <p><strong>Challenges during this period:</strong>
+                ${getDashaChallenges(dashaInfo.mainDasha)}</p>
+                <p><strong>Favorable activities:</strong>
+                ${getDashaOpportunities(dashaInfo.mainDasha)}</p>
+            </div>
+        </div>
+        
+        <div class="prediction-card">
+            <h4><span>🛡️</span> Recommended Remedial Measures</h4>
+            <p>Based on your <span class="highlight">${dashaInfo.mainDasha} Mahadasha</span>, 
+               the following remedial measures are advised:</p>
+            <button class="toggle-btn" onclick="toggleSection('remediesDetails')">Show Detailed Remedies</button>
+            <div id="remediesDetails" class="hidden-section">
+                ${generateRemediesHTML(dashaInfo.mainDasha)}
+            </div>
+        </div>
+    `;
+    
+    // Add Dasha analysis before planetary influences section
+    const planetarySection = document.querySelector('h3:contains("Planetary Influences")');
+    planetarySection.insertAdjacentHTML('beforebegin', `
+        <h3><i class="fas fa-hourglass-half icon"></i> Dasha Analysis & Remedies</h3>
+        ${dashaHTML}
+    `);
+}
+
+// Helper function to generate remedies HTML
+function generateRemediesHTML(dasha) {
+    const remedies = getRemedialMeasures(dasha);
+    return `
+        <p><strong>Fasting Day:</strong> <span class="highlight">${remedies.fasting}</span></p>
+        <p><strong>Favorable Color:</strong> <span class="highlight">${remedies.color}</span></p>
+        <p><strong>Deity to Worship:</strong> <span class="highlight">${remedies.deity}</span></p>
+        <p><strong>Beneficial Mantra:</strong> <span class="highlight">${remedies.mantra}</span></p>
+        <p><strong>Charitable Activities:</strong> <span class="highlight">${remedies.charity}</span></p>
+        <p><strong>Recommended Actions:</strong> <span class="highlight">${remedies.actions}</span></p>
+    `;
+}
+
+// Function to generate gemstone recommendations
+function generateGemstoneRecommendations(sign) {
+    const gemInfo = getGemstoneRecommendations(sign);
+    
+    const gemstoneHTML = `
+        <div class="prediction-card">
+            <h4><span>💎</span> Recommended Gemstones</h4>
+            <p>Based on your sun sign ${sign}, the following gemstones are recommended:</p>
+            <button class="toggle-btn" onclick="toggleSection('gemstoneDetails')">Show Detailed Gemstone Analysis</button>
+            <div id="gemstoneDetails" class="hidden-section">
+                <p><strong>Primary Stone:</strong> <span class="highlight">${gemInfo.primary}</span></p>
+                <p><strong>Secondary Stone:</strong> <span class="highlight">${gemInfo.secondary}</span></p>
+                <p><strong>Stone to Avoid:</strong> <span class="highlight">${gemInfo.avoid}</span></p>
+                <p><strong>Benefits:</strong> <span class="highlight">${gemInfo.benefits}</span></p>
+                <p><strong>How to Wear:</strong> <span class="highlight">${getHowToWear(gemInfo.primary)}</span></p>
+                <p><strong>Best Day to Start Wearing:</strong> <span class="highlight">${getBestDayToWear(gemInfo.primary)}</span></p>
+            </div>
+        </div>
+    `;
+    
+    // Add gemstone recommendations after remedial measures
+    const personalAdviceSection = document.querySelector('h3:contains("Personalized Advice")');
+    personalAdviceSection.insertAdjacentHTML('beforebegin', `
+        <h3><i class="fas fa-gem icon"></i> Gemstone Recommendations</h3>
+        ${gemstoneHTML}
+    `);
+}
+
+// Helper function to get how to wear instructions
+function getHowToWear(gemstone) {
+    const wearingGuide = {
+        "Red Coral": "Set in copper or gold, wear on Tuesday morning during sunrise",
+        "Ruby": "Set in gold, wear on Sunday morning during sunrise",
+        "Blue Sapphire": "Set in white gold or platinum, wear on Saturday evening",
+        "Diamond": "Set in platinum or white gold, wear on Friday morning",
+        "Emerald": "Set in gold, wear on Wednesday morning",
+        "Pearl": "Set in silver, wear on Monday evening",
+        "Yellow Sapphire": "Set in gold, wear on Thursday morning",
+        "Hessonite": "Set in gold, wear on Tuesday or Saturday",
+        "Cat's Eye": "Set in gold, wear on Tuesday or Friday"
+    };
+    
+    return wearingGuide[gemstone] || "Set in precious metal appropriate for your sign, consult an astrologer for exact timing";
+}
+
+// Helper function to get best day to wear
+function getBestDayToWear(gemstone) {
+    const bestDays = {
+        "Red Coral": "Tuesday",
+        "Ruby": "Sunday",
+        "Blue Sapphire": "Saturday",
+        "Diamond": "Friday",
+        "Emerald": "Wednesday",
+        "Pearl": "Monday",
+        "Yellow Sapphire": "Thursday",
+        "Hessonite": "Tuesday",
+        "Cat's Eye": "Tuesday",
+        "Amethyst": "Saturday",
+        "Moonstone": "Monday",
+        "Garnet": "Tuesday",
+        "Jade": "Wednesday",
+        "Opal": "Friday",
+        "Bloodstone": "Tuesday",
+        "Topaz": "Thursday",
+        "Lapis Lazuli": "Saturday"
+    };
+    
+    return bestDays[gemstone] || "During Shukla Paksha (waxing moon phase)";
+}
+
+// Function to get Dasha effects based on sign
+function getDashaEffects(dasha, sign) {
+    const effects = {
+        "Ketu": {
+            "Fire": "Spiritual awakening and unexpected travel opportunities",
+            "Earth": "Challenges with material stability but spiritual growth",
+            "Air": "Mental clarity but possible confusion in communications",
+            "Water": "Deep intuitive insights but emotional turbulence"
+        },
+        "Venus": {
+            "Fire": "Enhanced creative expression and romantic opportunities",
+            "Earth": "Financial prosperity and material comforts",
+            "Air": "Social harmony and artistic accomplishments",
+            "Water": "Emotional fulfillment and relationship bliss"
+        },
+        "Sun": {
+            "Fire": "Leadership opportunities and career advancement",
+            "Earth": "Recognition from authority figures and steady progress",
+            "Air": "Intellectual achievements and public acknowledgment",
+            "Water": "Personal growth and emotional clarity"
+        },
+        "Moon": {
+            "Fire": "Emotional intensity with creative inspiration",
+            "Earth": "Domestic happiness and property acquisition",
+            "Air": "Mental peace and improved intuition",
+            "Water": "Emotional healing and enhanced psychic abilities"
+        },
+        "Mars": {
+            "Fire": "Bold initiatives and competitive successes",
+            "Earth": "Practical achievements through determined efforts",
+            "Air": "Strategic thinking and effective communication",
+            "Water": "Emotional courage and transformative actions"
+        },
+        "Rahu": {
+            "Fire": "Ambition reaching new heights but possible restlessness",
+            "Earth": "Material success but watch for excessive desires",
+            "Air": "Innovative thinking but potential for mental anxiety",
+            "Water": "Deep emotional insights but possible obsessions"
+        },
+        "Jupiter": {
+            "Fire": "Expanded opportunities and spiritual growth",
+            "Earth": "Wealth accumulation and educational advancement",
+            "Air": "Wisdom acquisition and teaching opportunities",
+            "Water": "Emotional expansion and spiritual fulfillment"
+        },
+        "Saturn": {
+            "Fire": "Discipline in creative endeavors and leadership",
+            "Earth": "Long-term material security through hard work",
+            "Air": "Structured thinking and methodical learning",
+            "Water": "Emotional maturity and responsibility in relationships"
+        },
+        "Mercury": {
+            "Fire": "Enhanced communication skills and quick decision-making",
+            "Earth": "Practical intelligence and business acumen",
+            "Air": "Intellectual brilliance and versatile abilities",
+            "Water": "Intuitive understanding and emotional intelligence"
+        }
+    };
+    
+    const elementMap = {
+        "Aries": "Fire", "Leo": "Fire", "Sagittarius": "Fire",
+        "Taurus": "Earth", "Virgo": "Earth", "Capricorn": "Earth",
+        "Gemini": "Air", "Libra": "Air", "Aquarius": "Air",
+        "Cancer": "Water", "Scorpio": "Water", "Pisces": "Water"
+    };
+    
+    const element = elementMap[sign];
+    return effects[dasha][element] || "Mixed influences depending on other planetary positions";
+}
+
+// Function to get Dasha challenges
+function getDashaChallenges(dasha) {
+    const challenges = {
+        "Ketu": "Feeling disconnected, confusion about life direction, unexpected separations",
+        "Venus": "Overindulgence, relationship complications, vanity issues",
+        "Sun": "Ego conflicts, authority problems, health issues related to vitality",
+        "Moon": "Emotional instability, domestic conflicts, fluctuating mind",
+        "Mars": "Anger management issues, accidents, conflicts and competitions",
+        "Rahu": "Obsessions, deception, unhealthy desires and cravings",
+        "Jupiter": "Overconfidence, weight gain, excessive optimism",
+        "Saturn": "Delays, depression, chronic health issues, responsibility burdens",
+        "Mercury": "Overthinking, nervousness, communication misunderstandings"
+    };
+    
+    return challenges[dasha] || "Challenges specific to your birth chart configuration";
+}
+
+// Function to get Dasha opportunities
+function getDashaOpportunities(dasha) {
+    const opportunities = {
+        "Ketu": "Spiritual practices, meditation, detachment from material desires",
+        "Venus": "Arts, entertainment, beauty-related ventures, relationships",
+        "Sun": "Government jobs, leadership roles, father-related activities",
+        "Moon": "Water-related businesses, real estate, hospitality",
+        "Mars": "Sports, surgery, mechanical or technical fields, competitions",
+        "Rahu": "Foreign collaborations, unconventional careers, mass communication",
+        "Jupiter": "Teaching, counseling, religious activities, higher education",
+        "Saturn": "Real estate, agriculture, public service, antiques",
+        "Mercury": "Writing, accounting, communication, trading, technology"
+    };
+    
+    return opportunities[dasha] || "Opportunities aligned with your natural talents";
+}
+
+// Add this to your existing document.querySelector code for DOM manipulation
+if (!document.querySelector) {
+    document.querySelector = function(selector) {
+        if (selector.includes(':contains')) {
+            const term = selector.match(/:contains\("([^"]+)"\)/)[1];
+            const elements = document.getElementsByTagName('h3');
+            for (let i = 0; i < elements.length; i++) {
+                if (elements[i].textContent.includes(term)) {
+                    return elements[i];
+                }
+            }
+            return null;
+        }
+        return document.querySelector(selector);
+    };
+}
+
+// Add this to innerHTML for element insertion
+if (!HTMLElement.prototype.insertAdjacentHTML) {
+    HTMLElement.prototype.insertAdjacentHTML = function(position, html) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        if (position === 'beforebegin') {
+            this.parentNode.insertBefore(tempDiv.firstChild, this);
+        } else if (position === 'afterbegin') {
+            this.insertBefore(tempDiv.firstChild, this.firstChild);
+        } else if (position === 'beforeend') {
+            this.appendChild(tempDiv.firstChild);
+        } else if (position === 'afterend') {
+            this.parentNode.insertBefore(tempDiv.firstChild, this.nextSibling);
+        }
+    };
+}<!-- Add this section before the "Planetary Influences" section in the result container -->
+<h3><i class="fas fa-hourglass-half icon"></i> Dasha Analysis & Remedies</h3>
+<div class="prediction-card">
+    <h4><span id="dashaEmoji">⏳</span> Your Current Dasha Period</h4>
+    <p>You are currently running <span id="mainDasha" class="highlight">Jupiter Mahadasha</span> with 
+       <span id="subDasha" class="highlight">Venus Antardasha</span>.</p>
+    <p>Your <span id="currentDasha">Jupiter</span> Mahadasha has <span id="remainingYears" class="highlight">3 years</span> remaining, 
+       after which <span id="nextDasha" class="highlight">Saturn Mahadasha</span> will begin.</p>
+    <button class="toggle-btn" onclick="toggleSection('dashaDetails')">Show Detailed Dasha Analysis</button>
+    <div id="dashaDetails" class="hidden-section">
+        <p><strong><span id="dashaInfluenceTitle">Jupiter</span> Influence:</strong> 
+        <span id="dashaEffects">Expanded opportunities and possible financial growth</span></p>
+        <p><strong>Challenges during this period:</strong>
+        <span id="dashaChallenges">Overconfidence, excessive optimism, possible weight gain</span></p>
+        <p><strong>Favorable activities:</strong>
+        <span id="dashaOpportunities">Teaching, counseling, religious activities, higher education</span></p>
+    </div>
+</div>
+
+<div class="prediction-card">
+    <h4><span>🛡️</span> Recommended Remedial Measures</h4>
+    <p>Based on your <span id="remedyDasha" class="highlight">Jupiter Mahadasha</span>, 
+       the following remedial measures are advised:</p>
+    <button class="toggle-btn" onclick="toggleSection('remediesDetails')">Show Detailed Remedies</button>
+    <div id="remediesDetails" class="hidden-section">
+        <p><strong>Fasting Day:</strong> <span id="fastingDay" class="highlight">Thursdays</span></p>
+        <p><strong>Favorable Color:</strong> <span id="favorableColor" class="highlight">Yellow or gold</span></p>
+        <p><strong>Deity to Worship:</strong> <span id="deityToWorship" class="highlight">Lord Vishnu or Dakshinamurthy</span></p>
+        <p><strong>Beneficial Mantra:</strong> <span id="beneficialMantra" class="highlight">Om Gram Greem Graum Sah Gurave Namah</span></p>
+        <p><strong>Charitable Activities:</strong> <span id="charitableActivities" class="highlight">Donate yellow items, books, gold</span></p>
+        <p><strong>Recommended Actions:</strong> <span id="recommendedActions" class="highlight">Respect teachers, study spiritual texts</span></p>
+    </div>
+</div>
+
+<!-- Add this section before the "Personalized Advice" section -->
+<h3><i class="fas fa-gem icon"></i> Gemstone Recommendations</h3>
+<div class="prediction-card">
+    <h4><span>💎</span> Recommended Gemstones</h4>
+    <p>Based on your sun sign <span id="gemstoneSignRef">Leo</span>, the following gemstones are recommended:</p>
+    <button class="toggle-btn" onclick="toggleSection('gemstoneDetails')">Show Detailed Gemstone Analysis</button>
+    <div id="gemstoneDetails" class="hidden-section">
+        <p><strong>Primary Stone:</strong> <span id="primaryStone" class="highlight">Ruby</span></p>
+        <p><strong>Secondary Stone:</strong> <span id="secondaryStone" class="highlight">Garnet</span></p>
+        <p><strong>Stone to Avoid:</strong> <span id="avoidStone" class="highlight">Emerald</span></p>
+        <p><strong>Benefits:</strong> <span id="stoneBenefits" class="highlight">Boosts confidence, authority, and creative expression</span></p>
+        <p><strong>How to Wear:</strong> <span id="howToWear" class="highlight">Set in gold, wear on Sunday morning during sunrise</span></p>
+        <p><strong>Best Day to Start Wearing:</strong> <span id="bestDayToWear" class="highlight">Sunday</span></p>
+    </div>
+</div>
